@@ -19,6 +19,10 @@ button{
     width: 75px;
 }
 
+.cancel-button{
+    display:none
+}
+
 input[type="checkbox"]{
     margin-right: 10px;
 }
@@ -67,20 +71,32 @@ button{
     border-radius: 5px;
 }
 
-.add-task{
-
-}
 
 .task-text{
+    display: none;
     flex-grow: 1;
     padding: 10px;
     border-radius: 5px;
 }
 
+.task-name{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkbox{
+    vertical-align: middle;
+}
+
 .active{
-    display: block;
+    display: inline-block;
 }
 
 .disactive{
     display: none;
 }
+
+
+
+
+
