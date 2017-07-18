@@ -19,9 +19,6 @@ button{
     width: 75px;
 }
 
-.cancel-button{
-    display:none
-}
 
 input[type="checkbox"]{
     margin-right: 10px;
@@ -71,9 +68,7 @@ button{
     border-radius: 5px;
 }
 
-
-.task-text{
-    display: none;
+.changeTaskTitle{
     flex-grow: 1;
     padding: 10px;
     border-radius: 5px;

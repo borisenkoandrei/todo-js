@@ -1,35 +1,51 @@
 const Tasks = document.querySelector(".tasks");
-
 const Add = document.querySelector(".add-task");
-const Delete = document.querySelector(".delete-button");
 const TaskText = document.querySelector(".new-task-text");
+var id = 0;
 
-function addNewTask(e) {
-    e.preventDefault();
+function idInk() {
+    id++;
+    return id;
+}
+let tasksArray = [];
 
-    if(TaskText.value === ""){
-        alert("Task is empty!");
+function addNewTask(event) {
+    event.preventDefault();
+
+    if (TaskText.value === ""){
+        alert("Task is empty");
         return;
     }
 
+    let task = createTask(TaskText.value);
+    Tasks.appendChild(task);
+
+    TaskText.value = "";
+
+}
+
+function createTask(value, id){
+    !id ? id = idInk(): id;
+
     let taskContainer = document.createElement("li");
     taskContainer.setAttribute("class", "task");
+    taskContainer.setAttribute("id", id);
 
     let checkbox = document.createElement("input");
     checkbox.setAttribute("type","checkbox");
     checkbox.setAttribute("class", "checkbox");
 
-    let taskName = document.createElement('div');
-    taskName.setAttribute("class", "task-name");
-    taskName.innerText = TaskText.value;
+    let taskTitle = document.createElement('div');
+    taskTitle.setAttribute("class", "task-name");
+    taskTitle.innerText = value;
 
     let taskNameContainer = document.createElement("label");
     taskNameContainer.setAttribute("class","active");
 
-    let taskText = document.createElement("input");
-    taskText.setAttribute("class","task-text");
-    taskText.setAttribute("type","text");
-    taskText.setAttribute("placeholder","Task...");
+    let changeTaskTitle = document.createElement("input");
+    changeTaskTitle.setAttribute("class","changeTaskTitle disactive");
+    changeTaskTitle.setAttribute("type","text");
+    changeTaskTitle.setAttribute("placeholder","Task...");
 
     let changeButton = document.createElement("button");
     changeButton.setAttribute("class", "change-button");
@@ -40,69 +56,81 @@ function addNewTask(e) {
     deleteButton.innerText = "Удалить";
 
     let cancelButton = document.createElement("button");
-    cancelButton.setAttribute("class", "cancel-button");
+    cancelButton.setAttribute("class", "cancel-button disactive");
     cancelButton.innerText = "Отмена";
 
     taskNameContainer.appendChild(checkbox);
-    taskNameContainer.appendChild(taskName);
-    taskNameContainer.appendChild(taskText);
+    taskNameContainer.appendChild(taskTitle);
+    taskNameContainer.appendChild(changeTaskTitle);
     taskContainer.appendChild(taskNameContainer);
     taskContainer.appendChild(changeButton);
     taskContainer.appendChild(deleteButton);
     taskContainer.appendChild(cancelButton);
 
-    Tasks.appendChild(taskContainer);
-
-    TaskText.value = "";
+    addEvents(taskContainer);
+    return taskContainer;
 }
 
-
-function changeTask(e) {
-    let target = e.target;
-    let task = target.closest(".task");
-    let taskName = task.querySelector(".task-name");
-    let changeTaskName = task.querySelector(".task-text");
-    let deleteButton = task.querySelector(".delete-button");
+function addEvents(task) {
+    let checkbox = task.querySelector(".checkbox");
+    let changeButton = task.querySelector(".change-button");
     let cancelButton = task.querySelector(".cancel-button");
+    let deleteButton = task.querySelector(".delete-button");
+
+    checkbox.addEventListener("click",checkboxEvent);
+    changeButton.addEventListener("click",changeButtonEvent)
 
 
-    if (target.className === "change-button" && !taskName.classList.contains("disactive")){
+}
 
-        taskName.classList.toggle("disactive");
-        changeTaskName.value = taskName.innerHTML;
-        changeTaskName.classList.toggle("active");
+function checkboxEvent(event){
+    let task = this.closest(".task");
+    let checkbox = this;
+    let changeButton = task.querySelector(".change-button");
+    let deleteButton = task.querySelector(".delete-button");
+    let taskTitle = task.querySelector(".task-name");
 
-        deleteButton.classList.toggle("disactive");
-        cancelButton.classList.toggle("active");
-
-    } else if (target.className === "change-button" && taskName.classList.contains("disactive")){
-        taskName.classList.toggle("disactive");
-        taskName.innerHTML = changeTaskName.value;
-        changeTaskName.classList.toggle("active");
-
-        deleteButton.classList.toggle("disactive");
-        cancelButton.classList.toggle("active");
-    } else if (target.classList.contains("cancel-button")){
-        console.log('OK')
-        taskName.classList.toggle("disactive");
-        changeTaskName.classList.toggle("active");
-
-        deleteButton.classList.toggle("disactive");
-        cancelButton.classList.toggle("active");
-    } else if (target.className === "delete-button") {
-        Tasks.removeChild(task);
+    if(checkbox.checked){
+        changeButton.setAttribute("disabled", null);
+        deleteButton.setAttribute("disabled", null);
+        taskTitle.style.textDecoration = "line-through";
+    } else {
+        changeButton.removeAttribute("disabled");
+        deleteButton.removeAttribute("disabled");
+        taskTitle.style.textDecoration = "none";
     }
 }
 
-function reversedActiveElement(activeElement, disactiveElement) {
-    activeElement.classList.toggle("disactive");
-    disaciveElement.classList.toggle("active");
+function changeButtonEvent (event) {
+    let task = this.closest(".task");
+    let checkbox = task.querySelector(".checkbox");
+    let changeButton = this;
+    let deleteButton = task.querySelector(".delete-button");
+    let cancelButton = task.querySelector(".cancel-button");
+    let taskTitle = task.querySelector(".task-name");
+    let changeTaskTitle = task.querySelector(".changeTaskTitle");
+
+    if (changeTaskTitle.classList.contains("disactive")){
+        checkbox.classList.toggle("disactive");
+        taskTitle.classList.toggle("disactive");
+        deleteButton.classList.toggle("disactive");
+        cancelButton.classList.toggle("disactive");
+        changeTaskTitle.classList.toggle("disactive");
+    } else{
+        taskTitle.innerHTML = changeTaskTitle.value;
+        checkbox.classList.toggle("disactive");
+        taskTitle.classList.toggle("disactive");
+        deleteButton.classList.toggle("disactive");
+        cancelButton.classList.toggle("disactive");
+        changeTaskTitle.classList.toggle("disactive");
+    }
+
 
 
 }
 
 Add.addEventListener("click",addNewTask);
-Tasks.addEventListener('click', changeTask);
+
 
 
 
