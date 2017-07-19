@@ -3,6 +3,18 @@ const Add = document.querySelector(".add-task");
 const TaskText = document.querySelector(".new-task-text");
 var id = 0;
 
+var tasksItem = {
+    taskq : function(){return this.closest(".task")},
+    checkboxq : function () {return this.closest(".task").querySelector(".checkbox")},
+    changeButtonq : function () {return this.closest(".task").querySelector(".change-button")} ,
+    deleteButtonq : function () {return this.closest(".task").querySelector(".delete-button")},
+    cancelButtonq : function () {return this.closest(".task").querySelector(".cancel-button")},
+    taskTitleq : function () {return this.closest(".task").querySelector(".task-name")},
+    changeTaskTitleq : function () {return this.closest(".task").querySelector(".changeTaskTitle")}
+};
+
+
+
 function idInk() {
     id++;
     return id;
@@ -78,10 +90,13 @@ function addEvents(task) {
     let deleteButton = task.querySelector(".delete-button");
 
     checkbox.addEventListener("click",checkboxEvent);
-    changeButton.addEventListener("click",changeButtonEvent)
-
-
+    changeButton.addEventListener("click",changeButtonEvent);
+    cancelButton. addEventListener("click",cancelButtonEvent);
+    deleteButton. addEventListener("click",deleteButtonEvent);
 }
+
+
+
 
 function checkboxEvent(event){
     let task = this.closest(".task");
@@ -102,32 +117,70 @@ function checkboxEvent(event){
 }
 
 function changeButtonEvent (event) {
-    let task = this.closest(".task");
-    let checkbox = task.querySelector(".checkbox");
-    let changeButton = this;
-    let deleteButton = task.querySelector(".delete-button");
-    let cancelButton = task.querySelector(".cancel-button");
-    let taskTitle = task.querySelector(".task-name");
-    let changeTaskTitle = task.querySelector(".changeTaskTitle");
 
-    if (changeTaskTitle.classList.contains("disactive")){
-        checkbox.classList.toggle("disactive");
-        taskTitle.classList.toggle("disactive");
-        deleteButton.classList.toggle("disactive");
-        cancelButton.classList.toggle("disactive");
-        changeTaskTitle.classList.toggle("disactive");
+    // console.log(tasksItem.taskq.call(this));
+    // console.log(tasksItem.checkboxq.call(this));
+    // console.log(tasksItem.deleteButtonq.call(this));
+    // console.log(tasksItem.cancelButtonq.call(this));
+    // console.log(tasksItem.changeButtonq.call(this));
+    // console.log(tasksItem.taskTitleq.call(this));
+    // console.log(tasksItem.changeTaskTitleq.call(this));
+
+
+    // let task = this.closest(".task");
+    // let checkbox = task.querySelector(".checkbox");
+    // let changeButton = this;
+    // let deleteButton = task.querySelector(".delete-button");
+    // let cancelButton = task.querySelector(".cancel-button");
+    // let taskTitle = task.querySelector(".task-name");
+    // let changeTaskTitle = task.querySelector(".changeTaskTitle");
+
+    if (tasksItem.changeTaskTitleq.call(this).classList.contains("disactive")){
+        tasksItem.changeTaskTitleq.call(this).value = tasksItem.taskTitleq.call(this).innerHTML;
+        tasksItem.checkboxq.call(this).classList.toggle("disactive");
+        tasksItem.taskTitleq.call(this).classList.toggle("disactive");
+        tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
+        tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
+        tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
     } else{
-        taskTitle.innerHTML = changeTaskTitle.value;
-        checkbox.classList.toggle("disactive");
-        taskTitle.classList.toggle("disactive");
-        deleteButton.classList.toggle("disactive");
-        cancelButton.classList.toggle("disactive");
-        changeTaskTitle.classList.toggle("disactive");
+        tasksItem.taskTitleq.call(this).innerHTML = tasksItem.changeTaskTitleq.call(this).value;
+        tasksItem.checkboxq.call(this).classList.toggle("disactive");
+        tasksItem.taskTitleq.call(this).classList.toggle("disactive");
+        tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
+        tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
+        tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
     }
 
 
 
 }
+
+function cancelButtonEvent(event){
+    // let task = this.closest(".task");
+    // let checkbox = task.querySelector(".checkbox");
+    // let changeButton = this;
+    // let deleteButton = task.querySelector(".delete-button");
+    // let cancelButton = task.querySelector(".cancel-button");
+    // let taskTitle = task.querySelector(".task-name");
+    // let changeTaskTitle = task.querySelector(".changeTaskTitle");
+
+    tasksItem.checkboxq.call(this).classList.toggle("disactive");
+    tasksItem.taskTitleq.call(this).classList.toggle("disactive");
+    tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
+    tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
+    tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
+
+    tasksItem.changeTaskTitleq.call(this).value = "";
+
+}
+
+function deleteButtonEvent(event){
+    console.log(Tasks);
+    console.log(tasksItem.taskq.call(this));
+    Tasks.removeChild(tasksItem.taskq.call(this));
+}
+
+
 
 Add.addEventListener("click",addNewTask);
 
