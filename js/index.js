@@ -32,8 +32,8 @@ function addNewTask(event) {
     let task = createTask(TaskText.value);
     Tasks.appendChild(task);
 
+    addTaskInArray(TaskText.value, task.id);
     TaskText.value = "";
-
 }
 
 function createTask(value, id){
@@ -83,6 +83,61 @@ function createTask(value, id){
     return taskContainer;
 }
 
+function addTask(value, id, status){
+
+    let taskContainer = document.createElement("li");
+    taskContainer.setAttribute("class", "task");
+    taskContainer.setAttribute("id", id);
+
+    let checkbox = document.createElement("input");
+    checkbox.setAttribute("type","checkbox");
+    checkbox.setAttribute("class", "checkbox");
+
+    let taskTitle = document.createElement('div');
+    taskTitle.setAttribute("class", "task-name");
+    taskTitle.innerText = value;
+
+    let taskNameContainer = document.createElement("label");
+    taskNameContainer.setAttribute("class","active");
+
+    let changeTaskTitle = document.createElement("input");
+    changeTaskTitle.setAttribute("class","changeTaskTitle disactive");
+    changeTaskTitle.setAttribute("type","text");
+    changeTaskTitle.setAttribute("placeholder","Task...");
+
+    let changeButton = document.createElement("button");
+    changeButton.setAttribute("class", "change-button");
+    changeButton.innerText = "Изменить";
+
+    let deleteButton = document.createElement("button");
+    deleteButton.setAttribute("class", "delete-button");
+    deleteButton.innerText = "Удалить";
+
+    let cancelButton = document.createElement("button");
+    cancelButton.setAttribute("class", "cancel-button disactive");
+    cancelButton.innerText = "Отмена";
+
+    taskNameContainer.appendChild(checkbox);
+    taskNameContainer.appendChild(taskTitle);
+    taskNameContainer.appendChild(changeTaskTitle);
+    taskContainer.appendChild(taskNameContainer);
+    taskContainer.appendChild(changeButton);
+    taskContainer.appendChild(deleteButton);
+    taskContainer.appendChild(cancelButton);
+
+    if (status === false){
+        console.log(taskContainer);
+        taskContainer.classList = "dasdasdasdasd";
+        console.log(taskContainer)
+    }
+
+    addEvents(taskContainer);
+    return taskContainer;
+
+}
+
+
+
 function addEvents(task) {
     let checkbox = task.querySelector(".checkbox");
     let changeButton = task.querySelector(".change-button");
@@ -91,14 +146,14 @@ function addEvents(task) {
 
     checkbox.addEventListener("click",checkboxEvent);
     changeButton.addEventListener("click",changeButtonEvent);
-    cancelButton. addEventListener("click",cancelButtonEvent);
-    deleteButton. addEventListener("click",deleteButtonEvent);
+    cancelButton.addEventListener("click",cancelButtonEvent);
+    deleteButton.addEventListener("click",deleteButtonEvent);
 }
 
 
 
 
-function checkboxEvent(event){
+function checkboxEvent(){
     let task = this.closest(".task");
     let checkbox = this;
     let changeButton = task.querySelector(".change-button");
@@ -109,10 +164,12 @@ function checkboxEvent(event){
         changeButton.setAttribute("disabled", null);
         deleteButton.setAttribute("disabled", null);
         taskTitle.style.textDecoration = "line-through";
+        setTaskStatusInArray(task.id);
     } else {
         changeButton.removeAttribute("disabled");
         deleteButton.removeAttribute("disabled");
         taskTitle.style.textDecoration = "none";
+        setTaskStatusInArray(task.id);
     }
 }
 
@@ -142,6 +199,7 @@ function changeButtonEvent (event) {
         tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
         tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
         tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
+        console.log("qwwwwwwwwww")
     } else{
         tasksItem.taskTitleq.call(this).innerHTML = tasksItem.changeTaskTitleq.call(this).value;
         tasksItem.checkboxq.call(this).classList.toggle("disactive");
@@ -149,6 +207,7 @@ function changeButtonEvent (event) {
         tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
         tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
         tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
+        changeTextInArray(tasksItem.taskq.call(this).id , tasksItem.changeTaskTitleq.call(this).value);
     }
 
 
@@ -169,23 +228,95 @@ function cancelButtonEvent(event){
     tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
     tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
     tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
-
     tasksItem.changeTaskTitleq.call(this).value = "";
 
 }
 
 function deleteButtonEvent(event){
-    console.log(Tasks);
-    console.log(tasksItem.taskq.call(this));
-    Tasks.removeChild(tasksItem.taskq.call(this));
+    let task = tasksItem.taskq.call(this);
+    console.log(task);
+    deleteTaskInArray(task.id);
+    Tasks.removeChild(task);
+
+}
+
+/**
+ * Работа с массивом задач
+ */
+
+
+function addTaskInArray(text, id) {
+    let task =  {
+        text: text,
+        id: id,
+        status: true
+    };
+
+    tasksArray.push(task);
+    addToLocalStorage();
+};
+
+function deleteTaskInArray(id) {
+    tasksArray.forEach(function (item, index) {
+        if (item.id === id){
+            tasksArray.splice(index, 1)
+        }
+    });
+    addToLocalStorage();
+}
+
+function setTaskStatusInArray(id) {
+    tasksArray.forEach(function (item, index) {
+        if (item.id === id){
+            let task =  {
+                text: item.text,
+                id: item.id,
+                status: !item.status
+            };
+
+            tasksArray.splice(index, 1, task);
+        }
+    });
+    addToLocalStorage();
+}
+
+function changeTextInArray(id, newText){
+    tasksArray.forEach(function (item, index) {
+        if (item.id === id){
+            let task =  {
+                text: newText,
+                id: item.id,
+                status: item.status
+            };
+            tasksArray.splice(index, 1, task);
+        }
+    });
+    addToLocalStorage();
+    console.log(tasksArray)
 }
 
 
+/**
+ * LocalStorage
+ */
+
+function addToLocalStorage() {
+    localStorage.setItem('tasksArray', JSON.stringify(tasksArray));
+}
+
+(function loadFromLocalStorage(){
+    tasksArray = JSON.parse(localStorage.getItem('tasksArray')) ;
+    tasksArray.forEach(function (item) {
+        let task = addTask(item.text,item.id, item.status);
+        Tasks.appendChild(task);
+    })
+})();
+
+function init (){
+
+}
 
 Add.addEventListener("click",addNewTask);
-
-
-
 
 
 
