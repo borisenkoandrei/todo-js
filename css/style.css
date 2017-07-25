@@ -1,0 +1,97 @@
+
+ul{
+    margin: 0;
+    padding: 0;
+
+}
+
+li{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+button{
+    height: 39px;
+    border-radius: 5px;
+    width: 75px;
+}
+
+
+input[type="checkbox"]{
+    margin-right: 10px;
+}
+
+.container{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 5px gray;
+}
+
+.todo-title{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    margin-top: 0px;
+    background-color: yellow;
+    margin-bottom: 10px;
+}
+
+.task{
+    margin: 10px;
+}
+
+label{
+    flex-grow: 1;
+
+}
+
+button{
+    margin-left: 10px;
+}
+
+.add-task-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+}
+
+.new-task-text{
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.changeTaskTitle{
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.task-name{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkbox{
+    vertical-align: middle;
+}
+
+.active{
+    display: inline-block;
+}
+
+.disactive{
+    display: none;
+}
+
+
+
+
+

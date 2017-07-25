@@ -3,6 +3,8 @@ const Add = document.querySelector(".add-task");
 const TaskText = document.querySelector(".new-task-text");
 var id = 0;
 
+
+
 var tasksItem = {
     taskq : function(){return this.closest(".task")},
     checkboxq : function () {return this.closest(".task").querySelector(".checkbox")},
@@ -13,12 +15,33 @@ var tasksItem = {
     changeTaskTitleq : function () {return this.closest(".task").querySelector(".changeTaskTitle")}
 };
 
+/**
+ *
+ * Получаем id
+ * @returns {number}
+ */
+
+function getId() {
+    if (Tasks.lastChild){
+        let id = +Tasks.lastChild.id + 1;
+        return id;
+    } else{
+        return 1;
+    }
+
+}
+
+/**
+ * Массив с задачами
+ * @type {Array}
+ */
+
 let tasksArray = [];
 
-function idInk() {
-    id++;
-    return id;
-}
+/**
+ * Обработчик события для кнопки "добавить"
+ * @param event
+ */
 
 function addNewTask(event) {
     event.preventDefault();
@@ -28,15 +51,21 @@ function addNewTask(event) {
         return;
     }
 
-    let task = createTask(TaskText.value);
+    let task = createTask(TaskText.value, getId());
     Tasks.appendChild(task);
 
     addTaskInArray(TaskText.value, task.id);
     TaskText.value = "";
 }
 
+/**
+ * Создаем DOM элемент задачи и навешиваем на его элементы обработчики событий
+ * @param value - текст задачи
+ * @param id
+ * @returns {Element}
+ */
+
 function createTask(value, id){
-    !id ? id = idInk(): id;
 
     let taskContainer = document.createElement("li");
     taskContainer.setAttribute("class", "task");
@@ -79,11 +108,17 @@ function createTask(value, id){
     taskContainer.appendChild(cancelButton);
 
     addEvents(taskContainer);
-
-    addToTaskArray(value, id, taskContainer.classList.contains("checked"));
-
     return taskContainer;
 }
+
+/**
+ * Функция создания элемента задачи из LocalStorage
+ *
+ * @param value - текст задачи
+ * @param id
+ * @param status - статус задачи true - в работе, false - выполнена
+ * @returns {Element}
+ */
 
 function addTask(value, id, status){
 
@@ -127,10 +162,17 @@ function addTask(value, id, status){
     taskContainer.appendChild(deleteButton);
     taskContainer.appendChild(cancelButton);
 
+
     if (status === false){
-        console.log(taskContainer);
-        taskContainer.classList = "dasdasdasdasd";
-        console.log(taskContainer)
+        let changeButton = taskContainer.querySelector(".change-button");
+        let deleteButton = taskContainer.querySelector(".delete-button");
+        let taskTitle = taskContainer.querySelector(".task-name");
+        let checkbox = taskContainer.querySelector(".checkbox");
+
+        changeButton.setAttribute("disabled", null);
+        deleteButton.setAttribute("disabled", null);
+        taskTitle.style.textDecoration = "line-through";
+        checkbox.checked = "true";
     }
 
     addEvents(taskContainer);
@@ -138,7 +180,10 @@ function addTask(value, id, status){
 
 }
 
-
+/**
+ * Навешиваем обработчики событий на элементы задачи;
+ * @param task
+ */
 
 function addEvents(task) {
     let checkbox = task.querySelector(".checkbox");
@@ -150,7 +195,7 @@ function addEvents(task) {
     changeButton.addEventListener("click",changeButtonEvent);
     cancelButton.addEventListener("click",cancelButtonEvent);
     deleteButton.addEventListener("click",deleteButtonEvent);
-}
+};
 
 
 
@@ -175,39 +220,29 @@ function checkboxEvent(){
     }
 }
 
-function changeButtonEvent (event) {
-
+function changeButtonEvent () {
     if (tasksItem.changeTaskTitleq.call(this).classList.contains("disactive")){
         tasksItem.changeTaskTitleq.call(this).value = tasksItem.taskTitleq.call(this).innerHTML;
-        tasksItem.changeButtonq.call(this).innerText = "Сохранить";
         tasksItem.checkboxq.call(this).classList.toggle("disactive");
         tasksItem.taskTitleq.call(this).classList.toggle("disactive");
         tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
         tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
         tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
-        console.log("qwwwwwwwwww")
     } else{
         tasksItem.taskTitleq.call(this).innerHTML = tasksItem.changeTaskTitleq.call(this).value;
-        tasksItem.changeButtonq.call(this).innerText = "Изменить";
         tasksItem.checkboxq.call(this).classList.toggle("disactive");
         tasksItem.taskTitleq.call(this).classList.toggle("disactive");
         tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
         tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
         tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
-<<<<<<< HEAD
         changeTextInArray(tasksItem.taskq.call(this).id , tasksItem.changeTaskTitleq.call(this).value);
-=======
-
-        editTaskArray(tasksItem.changeTaskTitleq.call(this).value, tasksItem.taskq.call(this).id)
-
->>>>>>> 2da30ba84c2671cf32e1b8f745275aeb536f3713
     }
 
 
 
 }
 
-function cancelButtonEvent(event){
+function cancelButtonEvent(){
     tasksItem.checkboxq.call(this).classList.toggle("disactive");
     tasksItem.taskTitleq.call(this).classList.toggle("disactive");
     tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
@@ -217,58 +252,19 @@ function cancelButtonEvent(event){
 
 }
 
-function deleteButtonEvent(event){
-<<<<<<< HEAD
+function deleteButtonEvent(){
     let task = tasksItem.taskq.call(this);
-    console.log(task);
     deleteTaskInArray(task.id);
     Tasks.removeChild(task);
 
 }
 
 /**
- * Работа с массивом задач
+ * Добавляем объект задачи в массив tasksArray
+ *
+ * @param text
+ * @param id
  */
-=======
-    Tasks.removeChild(tasksItem.taskq.call(this));
-}
-
-function addToTaskArray(value, id, status) {
-    let taskArrayItem = {
-        value: value,
-        id: id,
-        status: status
-    };
-
-    tasksArray.push(taskArrayItem);
-}
-
-function editTaskArray(newValue, id) {
-    tasksArray.forEach(function (item, index) {
-        if (item.id == id){
-
-            let n = {
-                value: newValue,
-                id: id,
-                status: item.status
-            };
-
-            tasksArray.splice(index, 1, n);
-        }
-    });
-
-    console.log(tasksArray);
-}
-
-// function addToLocalStorage(text, id) {
-//
-// }
-//
-// function loadFromLocalStorage() {
-//
-// }
->>>>>>> 2da30ba84c2671cf32e1b8f745275aeb536f3713
-
 
 function addTaskInArray(text, id) {
     let task =  {
@@ -281,6 +277,12 @@ function addTaskInArray(text, id) {
     addToLocalStorage();
 };
 
+/**
+ * Удаляем объект задачи из массива tasksArray
+ *
+ * @param id
+ */
+
 function deleteTaskInArray(id) {
     tasksArray.forEach(function (item, index) {
         if (item.id === id){
@@ -289,6 +291,12 @@ function deleteTaskInArray(id) {
     });
     addToLocalStorage();
 }
+
+/**
+ * Изменение статуса задачи в массиве tasksArray
+ *
+ * @param id
+ */
 
 function setTaskStatusInArray(id) {
     tasksArray.forEach(function (item, index) {
@@ -305,6 +313,14 @@ function setTaskStatusInArray(id) {
     addToLocalStorage();
 }
 
+/**
+ *
+ * Изменяем текст задачи
+ *
+ * @param id
+ * @param newText
+ */
+
 function changeTextInArray(id, newText){
     tasksArray.forEach(function (item, index) {
         if (item.id === id){
@@ -317,29 +333,38 @@ function changeTextInArray(id, newText){
         }
     });
     addToLocalStorage();
-    console.log(tasksArray)
 }
 
 
 /**
- * LocalStorage
+ * Добавление массива с задачами в Local Storage
  */
 
 function addToLocalStorage() {
     localStorage.setItem('tasksArray', JSON.stringify(tasksArray));
 }
 
-(function loadFromLocalStorage(){
-    tasksArray = JSON.parse(localStorage.getItem('tasksArray')) ;
+/**
+ * Загрузка масива с задачами из Local Storage
+ */
+
+function loadFromLocalStorage(){
+    tasksArray = JSON.parse(localStorage.getItem('tasksArray'));
     tasksArray.forEach(function (item) {
         let task = addTask(item.text,item.id, item.status);
         Tasks.appendChild(task);
     })
-})();
-
-function init (){
-
 }
+
+/**
+ * Проверка есть ли в LocalStorage данные, если есть добавляем оттуда
+ */
+
+(function init (){
+    if (localStorage.getItem('tasksArray')){
+        loadFromLocalStorage();
+    }
+})();
 
 Add.addEventListener("click",addNewTask);
 
