@@ -13,13 +13,12 @@ var tasksItem = {
     changeTaskTitleq : function () {return this.closest(".task").querySelector(".changeTaskTitle")}
 };
 
-
+let tasksArray = [];
 
 function idInk() {
     id++;
     return id;
 }
-let tasksArray = [];
 
 function addNewTask(event) {
     event.preventDefault();
@@ -80,6 +79,9 @@ function createTask(value, id){
     taskContainer.appendChild(cancelButton);
 
     addEvents(taskContainer);
+
+    addToTaskArray(value, id, taskContainer.classList.contains("checked"));
+
     return taskContainer;
 }
 
@@ -175,25 +177,9 @@ function checkboxEvent(){
 
 function changeButtonEvent (event) {
 
-    // console.log(tasksItem.taskq.call(this));
-    // console.log(tasksItem.checkboxq.call(this));
-    // console.log(tasksItem.deleteButtonq.call(this));
-    // console.log(tasksItem.cancelButtonq.call(this));
-    // console.log(tasksItem.changeButtonq.call(this));
-    // console.log(tasksItem.taskTitleq.call(this));
-    // console.log(tasksItem.changeTaskTitleq.call(this));
-
-
-    // let task = this.closest(".task");
-    // let checkbox = task.querySelector(".checkbox");
-    // let changeButton = this;
-    // let deleteButton = task.querySelector(".delete-button");
-    // let cancelButton = task.querySelector(".cancel-button");
-    // let taskTitle = task.querySelector(".task-name");
-    // let changeTaskTitle = task.querySelector(".changeTaskTitle");
-
     if (tasksItem.changeTaskTitleq.call(this).classList.contains("disactive")){
         tasksItem.changeTaskTitleq.call(this).value = tasksItem.taskTitleq.call(this).innerHTML;
+        tasksItem.changeButtonq.call(this).innerText = "Сохранить";
         tasksItem.checkboxq.call(this).classList.toggle("disactive");
         tasksItem.taskTitleq.call(this).classList.toggle("disactive");
         tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
@@ -202,12 +188,19 @@ function changeButtonEvent (event) {
         console.log("qwwwwwwwwww")
     } else{
         tasksItem.taskTitleq.call(this).innerHTML = tasksItem.changeTaskTitleq.call(this).value;
+        tasksItem.changeButtonq.call(this).innerText = "Изменить";
         tasksItem.checkboxq.call(this).classList.toggle("disactive");
         tasksItem.taskTitleq.call(this).classList.toggle("disactive");
         tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
         tasksItem.cancelButtonq.call(this).classList.toggle("disactive");
         tasksItem.changeTaskTitleq.call(this).classList.toggle("disactive");
+<<<<<<< HEAD
         changeTextInArray(tasksItem.taskq.call(this).id , tasksItem.changeTaskTitleq.call(this).value);
+=======
+
+        editTaskArray(tasksItem.changeTaskTitleq.call(this).value, tasksItem.taskq.call(this).id)
+
+>>>>>>> 2da30ba84c2671cf32e1b8f745275aeb536f3713
     }
 
 
@@ -215,14 +208,6 @@ function changeButtonEvent (event) {
 }
 
 function cancelButtonEvent(event){
-    // let task = this.closest(".task");
-    // let checkbox = task.querySelector(".checkbox");
-    // let changeButton = this;
-    // let deleteButton = task.querySelector(".delete-button");
-    // let cancelButton = task.querySelector(".cancel-button");
-    // let taskTitle = task.querySelector(".task-name");
-    // let changeTaskTitle = task.querySelector(".changeTaskTitle");
-
     tasksItem.checkboxq.call(this).classList.toggle("disactive");
     tasksItem.taskTitleq.call(this).classList.toggle("disactive");
     tasksItem.deleteButtonq.call(this).classList.toggle("disactive");
@@ -233,6 +218,7 @@ function cancelButtonEvent(event){
 }
 
 function deleteButtonEvent(event){
+<<<<<<< HEAD
     let task = tasksItem.taskq.call(this);
     console.log(task);
     deleteTaskInArray(task.id);
@@ -243,6 +229,45 @@ function deleteButtonEvent(event){
 /**
  * Работа с массивом задач
  */
+=======
+    Tasks.removeChild(tasksItem.taskq.call(this));
+}
+
+function addToTaskArray(value, id, status) {
+    let taskArrayItem = {
+        value: value,
+        id: id,
+        status: status
+    };
+
+    tasksArray.push(taskArrayItem);
+}
+
+function editTaskArray(newValue, id) {
+    tasksArray.forEach(function (item, index) {
+        if (item.id == id){
+
+            let n = {
+                value: newValue,
+                id: id,
+                status: item.status
+            };
+
+            tasksArray.splice(index, 1, n);
+        }
+    });
+
+    console.log(tasksArray);
+}
+
+// function addToLocalStorage(text, id) {
+//
+// }
+//
+// function loadFromLocalStorage() {
+//
+// }
+>>>>>>> 2da30ba84c2671cf32e1b8f745275aeb536f3713
 
 
 function addTaskInArray(text, id) {
